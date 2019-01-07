@@ -21,3 +21,12 @@
 .App-link {
   color: #61dafb;
 }
+
+.Paper {
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.Table {
+  min-width: 500px;
+}

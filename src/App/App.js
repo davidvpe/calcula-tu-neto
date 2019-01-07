@@ -1,17 +1,22 @@
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import './App.css';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import Typography from '@material-ui/core/Typography';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/InfoOutlined'
 
 class RowValue extends Component {
 
@@ -34,16 +39,20 @@ class RowValue extends Component {
 
   render() {
     return (
-      <div>
-        <ListItem onClick={this.handleOpen}>
-          <ListItemText primary={this.props.title} />
-          <ListItemText primary={this.props.amount} />
-        </ListItem>
+      <TableRow>
+        <TableCell component="th" scope="row">
+          {this.props.title}
+          <IconButton aria-label="Info">
+            <InfoIcon></InfoIcon>
+          </IconButton>
+        </TableCell>
+        <TableCell align="right">
+          {this.props.amount}
+        </TableCell>
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
-          open={this.state.open}
-        >
+          open={this.state.open}>
           <MuiDialogTitle id="customized-dialog-title">
             {this.props.label}
           </MuiDialogTitle>
@@ -58,7 +67,7 @@ class RowValue extends Component {
         </Button>
           </MuiDialogActions>
         </Dialog>
-      </div>
+      </TableRow>
     )
   }
 }
@@ -108,10 +117,10 @@ class App extends Component {
     let cts = salary
     let descuentoUIT = UIT * 7
     var remuneracionBrutaAnual = anualSalary
-    remuneracionBrutaAnual+=grati
-    remuneracionBrutaAnual+=vacaciones
-    remuneracionBrutaAnual+=cts
-    let remuneracionNetaAnual = remuneracionBrutaAnual-descuentoUIT
+    remuneracionBrutaAnual += grati
+    remuneracionBrutaAnual += vacaciones
+    remuneracionBrutaAnual += cts
+    let remuneracionNetaAnual = remuneracionBrutaAnual - descuentoUIT
 
     var impuestoALaRenta = 0
     var secciones = [0, 5, 20, 35, 45]
@@ -123,7 +132,7 @@ class App extends Component {
       var impuesto = 0
       var min = secciones[i] * UIT
       var max = secciones[i + 1] * UIT
-      var porcentaje = porcentajes[i] / 100  
+      var porcentaje = porcentajes[i] / 100
       console.log("min = " + min + " max = " + max + " porcentaje = " + porcentaje)
       if (remuneracionNetaAnual > min && remuneracionNetaAnual <= max) {
         impuesto = (remuneracionNetaAnual - min) * porcentaje
@@ -155,43 +164,46 @@ class App extends Component {
 
     let afp = (salary * mandatoryInsuranceTax) + (salary * mandatoryInsurancePrime) + (salary * mandatoryInsuranceComission)
 
-    let monthlyTax = (impuestoALaRenta/12)
+    let monthlyTax = (impuestoALaRenta / 12)
     let monthlySalary = salary - monthlyTax - afp
 
-    var uiImposedSections = [] 
-    for(var i=0 ; i<imposedSections.length ; i++) {
+    var uiImposedSections = []
+    for (var i = 0; i < imposedSections.length; i++) {
       let taxSection = imposedSections[i]
-      let title = "Segmento " + (i+1) + " - " + taxSection.percentage + "%"
+      let title = "Segmento " + (i + 1) + " - " + taxSection.percentage + "%"
       uiImposedSections.push(<RowValue title={title} amount={taxSection.chargedValue} explanation="lalalalalla" />)
     }
 
     return (
-      <List component="nav">
-        <RowValue title="Sueldo mensual" amount={salary} explanation="lalalalalla" />
-        <RowValue title="Sueldo anual" amount={anualSalary} explanation="lalalalalla" />
-        <RowValue title="Gratificaciones" amount={grati} explanation="lalalalalla" />
-        <RowValue title="Vacaciones" amount={vacaciones} explanation="lalalalalla" />
-        <RowValue title="CTS" amount={cts} explanation="lalalalalla" />
-        <RowValue title="Remuneracion Bruta Anual" amount={remuneracionBrutaAnual} explanation="lalalalalla" />
-        <RowValue title="Descuento de 7 UITs" amount={descuentoUIT} explanation="lalalalalla" />
-        <RowValue title="Remuneracion Neta Anual" amount={remuneracionNetaAnual} explanation="lalalalalla" />
-        {uiImposedSections}
-        <RowValue title="Impuesto a la renta anual proyectado" amount={impuestoALaRenta} explanation="lalalalalla" />
-        <RowValue title="Impuesto a la renta mensual" amount={monthlyTax} explanation="lalalalalla" />
-        <RowValue title="Aporte a AFP" amount={afp} explanation="lalalalalla" />
-        <RowValue title="Sueldo neto mensual" amount={monthlySalary} explanation="lalalalalla" />
-      </List>
+      <Table className="Table">
+        <TableBody>
+          <RowValue title="Sueldo mensual" amount={salary} explanation="lalalalalla" />
+          <RowValue title="Sueldo anual" amount={anualSalary} explanation="lalalalalla" />
+          <RowValue title="Gratificaciones" amount={grati} explanation="lalalalalla" />
+          <RowValue title="Vacaciones" amount={vacaciones} explanation="lalalalalla" />
+          <RowValue title="CTS" amount={cts} explanation="lalalalalla" />
+          <RowValue title="Remuneracion Bruta Anual" amount={remuneracionBrutaAnual} explanation="lalalalalla" />
+          <RowValue title="Descuento de 7 UITs" amount={descuentoUIT} explanation="lalalalalla" />
+          <RowValue title="Remuneracion Neta Anual" amount={remuneracionNetaAnual} explanation="lalalalalla" />
+          {uiImposedSections}
+          <RowValue title="Impuesto a la renta anual proyectado" amount={impuestoALaRenta} explanation="lalalalalla" />
+          <RowValue title="Impuesto a la renta mensual" amount={monthlyTax} explanation="lalalalalla" />
+          <RowValue title="Aporte a AFP" amount={afp} explanation="lalalalalla" />
+          <RowValue title="Sueldo neto mensual" amount={monthlySalary} explanation="lalalalalla" />
+        </TableBody>
+      </Table>
     )
   }
 
   render() {
     return (
       <div className="App">
-        <Grid container>
-          <Grid item xs={12}>
-            <header>
-              <h2>Calcula tu neto!</h2>
-            </header>
+        <Grid item>
+          <Paper className="Paper">
+            <Typography gutterBottom variant="h3">
+              Calcula tu neto!
+            </Typography>
+
             <TextField
               error={this.state.inputError}
               id="salary"
@@ -201,10 +213,11 @@ class App extends Component {
                 startAdornment: <InputAdornment position="start">S/.</InputAdornment>,
               }}
             />
-          </Grid>
-          <Grid item xs={12}>
-              {this.getRestOfRows()}
-          </Grid>
+          </Paper>
+
+          <Paper>
+            {this.getRestOfRows()}
+          </Paper>
         </Grid>
       </div>
     );
