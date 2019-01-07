@@ -149,8 +149,14 @@ class App extends Component {
       impuestoALaRenta += lastSection
     }
 
+    let mandatoryInsuranceTax = 0.1
+    let mandatoryInsuranceComission = 0.0169
+    let mandatoryInsurancePrime = 0.0136
+
+    let afp = (salary * mandatoryInsuranceTax) + (salary * mandatoryInsurancePrime) + (salary * mandatoryInsuranceComission)
+
     let monthlyTax = (impuestoALaRenta/12)
-    let monthlySalary = salary - monthlyTax
+    let monthlySalary = salary - monthlyTax - afp
 
     var uiImposedSections = [] 
     for(var i=0 ; i<imposedSections.length ; i++) {
@@ -172,6 +178,7 @@ class App extends Component {
         {uiImposedSections}
         <RowValue title="Impuesto a la renta anual proyectado" amount={impuestoALaRenta} explanation="lalalalalla" />
         <RowValue title="Impuesto a la renta mensual" amount={monthlyTax} explanation="lalalalalla" />
+        <RowValue title="Aporte a AFP" amount={afp} explanation="lalalalalla" />
         <RowValue title="Sueldo neto mensual" amount={monthlySalary} explanation="lalalalalla" />
       </List>
     )
