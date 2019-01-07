@@ -8,7 +8,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
@@ -26,8 +25,16 @@ class RowValue extends Component {
 
   constructor(props) {
     super(props);
+    var isMoney = true
+    console.log("antes del if")
+    if(this.props.money === undefined) {
+      isMoney = true
+    } else {
+      isMoney = false
+    }
     this.state = {
-      open: false
+      open: false,
+      isMoney: isMoney
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -57,7 +64,7 @@ class RowValue extends Component {
           <Typography>{this.props.title}</Typography>
           </Grid>
           <Grid item xs={3} sm={3}>
-          <Typography className="wrappedText" color={amountColor}>{"S/." + this.props.amount}</Typography>
+          <Typography className="wrappedText" color={amountColor}>{ (this.state.isMoney ? "S/." : "") + this.props.amount}</Typography>
           </Grid>
         
         <Dialog
@@ -187,9 +194,7 @@ class App extends Component {
     let lastLimit = (secciones[secciones.length - 1] * selectedUIT)
     if (remuneracionNetaAnual > lastLimit) {
       let lastPercentage = (porcentajes[porcentajes.length - 1] / 100)
-      console.log("lastPercentage" + lastPercentage)
       let lastSection = (remuneracionNetaAnual - lastLimit) * lastPercentage
-      console.log("lastSection" + lastSection)
       impuestoALaRenta += lastSection
       imposedSections.push({
         percentage: porcentajes[porcentajes.length - 1],
@@ -206,6 +211,10 @@ class App extends Component {
 
     let monthlyTax = (impuestoALaRenta / 12)
     let monthlySalary = salary - monthlyTax - afp
+    
+    let percentageOfSalary = salary > 0 ? (monthlySalary/salary)*100 : 0
+
+
     var uiImpuestoALaRenta = []
     if (remuneracionNetaAnual > 0) {
       uiImpuestoALaRenta.push(
@@ -248,6 +257,7 @@ class App extends Component {
           <RowValue title="Aporte a AFP" amount={-afp.toFixed(2)} explanation="Esto es un aproximado de lo pagarias por AFP" />
           <Divider />
           <RowValue title="Sueldo neto mensual" amount={monthlySalary.toFixed(2)} explanation="Este es tu sueldo neto mensual" />
+          <RowValue title="Porcentaje del sueldo" money={false} amount={percentageOfSalary.toFixed(2) + "%"} explanation="Este es el porcentaje de tu salario que realmente recibes" />
       </List>
     )
   }
