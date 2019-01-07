@@ -6,10 +6,9 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
@@ -20,6 +19,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import Divider from '@material-ui/core/Divider';
 import Input from '@material-ui/core/Input';
 
 class RowValue extends Component {
@@ -49,18 +49,17 @@ class RowValue extends Component {
     }
 
     return (
-      <TableRow style={{ width: "30px" }}>
-        <TableCell component="th" scope="row">
-          {this.props.title}
+      <ListItem>
+          <Grid className="aligned" container xs={9} sm={9}>
           <IconButton aria-label="Info" onClick={this.handleOpen}>
             <InfoIcon></InfoIcon>
           </IconButton>
-        </TableCell>
-        <TableCell align="right">
-          <Typography color={amountColor}>
-            {"S/." + this.props.amount}
-          </Typography>
-        </TableCell>
+          <Typography>{this.props.title}</Typography>
+          </Grid>
+          <Grid item xs={3} sm={3}>
+          <Typography className="wrappedText" color={amountColor}>{"S/." + this.props.amount}</Typography>
+          </Grid>
+        
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
@@ -79,7 +78,7 @@ class RowValue extends Component {
         </Button>
           </MuiDialogActions>
         </Dialog>
-      </TableRow>
+      </ListItem>
     )
   }
 }
@@ -214,9 +213,12 @@ class App extends Component {
         <RowValue title="Gratificaciones" amount={grati.toFixed(2)} explanation="Este es el total de gratificaciones que vas a percibir incluyendo el 8% de ESSALUD" />,
         <RowValue title="Vacaciones" amount={vacaciones.toFixed(2)} explanation="Este es el sueldo adicional por vacaciones" />,
         <RowValue title="CTS" amount={cts.toFixed(2)} explanation="Este es el sueldo adicional por CTS" />,
+        <Divider />,
         <RowValue title="Remuneracion Bruta Anual" amount={remuneracionBrutaAnual.toFixed(2)} explanation="Esta es la suma de tu sueldo anual mas gratificaciones, vacaciones y CTS" />,
         <RowValue title="Descuento de hasta 7 UITs" amount={-descuentoUIT.toFixed(2)} explanation="Este es un beneficio que otorga la SUNAT en el calculo del impuesto a la renta, te descuentan hasta 7 UITs" />,
-        <RowValue title="Remuneracion Neta Anual" amount={remuneracionNetaAnual.toFixed(2)} explanation="Esta es la remuneracion neta sobre la cual se calcula el impuesto a la renta con el beneficio del descuento de las 7 UITs" />
+        <Divider />,
+        <RowValue title="Remuneracion Neta Anual" amount={remuneracionNetaAnual.toFixed(2)} explanation="Esta es la remuneracion neta sobre la cual se calcula el impuesto a la renta con el beneficio del descuento de las 7 UITs" />,
+        <Divider />
       )
       uiImpuestoALaRenta.push(
         imposedSections.map(function (item, i) {
@@ -234,19 +236,19 @@ class App extends Component {
         })
       )
       uiImpuestoALaRenta.push(
+        <Divider />,
         <RowValue title="Impuesto a la renta anual proyectado" amount={-impuestoALaRenta.toFixed(2)} explanation="Este es el total de impuesto a la renta que debes pagar en el año" />,
         <RowValue title="Impuesto a la renta mensual" amount={-monthlyTax.toFixed(2)} explanation="Este seria el monton mensual que se descuenta por impuesto a la renta" />)
     }
 
     return (
-      <Table className="Table">
-        <TableBody>
+      <List>
           <RowValue title="Sueldo mensual" amount={salary.toFixed(2)} explanation="Este es tu sueldo mensual" />
           {uiImpuestoALaRenta}
           <RowValue title="Aporte a AFP" amount={-afp.toFixed(2)} explanation="Esto es un aproximado de lo pagarias por AFP" />
+          <Divider />
           <RowValue title="Sueldo neto mensual" amount={monthlySalary.toFixed(2)} explanation="Este es tu sueldo neto mensual" />
-        </TableBody>
-      </Table>
+      </List>
     )
   }
 
@@ -267,11 +269,11 @@ class App extends Component {
                 onChange={this.handleUITChange}
                 input={<Input name="age" id="age-native-label-placeholder" />}
               >
-              {
-                UIT.map(function(item, i) {
-                  return <option value={item.amount}>{item.year}</option>
-                })
-              }
+                {
+                  UIT.map(function (item, i) {
+                    return <option value={item.amount}>{item.year}</option>
+                  })
+                }
               </NativeSelect>
               <FormHelperText>Año</FormHelperText>
             </FormControl>

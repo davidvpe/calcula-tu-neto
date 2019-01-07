@@ -27,6 +27,13 @@
   margin-bottom: 16px;
 }
 
-.Table {
-  min-width: 500px;
+.aligned {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.wrappedText {
+  word-wrap: break-word;
 }
