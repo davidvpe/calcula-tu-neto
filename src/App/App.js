@@ -14,9 +14,13 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import './App.css';
-import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/InfoOutlined'
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import Input from '@material-ui/core/Input';
 
 class RowValue extends Component {
 
@@ -45,7 +49,7 @@ class RowValue extends Component {
     }
 
     return (
-      <TableRow>
+      <TableRow style={{ width: "30px" }}>
         <TableCell component="th" scope="row">
           {this.props.title}
           <IconButton aria-label="Info" onClick={this.handleOpen}>
@@ -80,19 +84,36 @@ class RowValue extends Component {
   }
 }
 
+const UIT = [
+  {
+    year: 2019,
+    amount: 4200
+  },
+  {
+    year: 2018,
+    amount: 4150
+  },
+  {
+    year: 2017,
+    amount: 4050
+  },
+]
+
 class App extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
       salary: 0,
-      inputError: false
+      inputError: false,
+      UIT: UIT[0].amount
     }
-    this.handleChange = this.handleChange.bind(this)
+    this.handleSalaryChange = this.handleSalaryChange.bind(this)
+    this.handleUITChange = this.handleUITChange.bind(this)
     this.getRestOfRows = this.getRestOfRows.bind(this)
   }
 
-  handleChange(e) {
+  handleSalaryChange(e) {
     const salary = e.target.value
     console.log(salary)
     if (!isNaN(salary)) {
@@ -107,9 +128,16 @@ class App extends Component {
     }
   }
 
+  handleUITChange(e) {
+    let newUIT = e.target.value
+    this.setState({
+      UIT: newUIT
+    })
+  }
+
   getRestOfRows() {
 
-    let UIT = 4200
+    let selectedUIT = this.state.UIT
     let essalud = 0.08
 
     let salary = Number(this.state.salary)
@@ -117,7 +145,7 @@ class App extends Component {
     let grati = salary * 2 * (1 + essalud)
     let vacaciones = salary
     let cts = salary
-    var descuentoUIT = UIT * 7
+    var descuentoUIT = selectedUIT * 7
     var remuneracionBrutaAnual = anualSalary
     remuneracionBrutaAnual += grati
     remuneracionBrutaAnual += vacaciones
@@ -137,15 +165,15 @@ class App extends Component {
 
     for (var i = 0; i < porcentajes.length - 1; i++) {
       var impuesto = 0
-      var min = secciones[i] * UIT
-      var max = secciones[i + 1] * UIT
+      var min = secciones[i] * selectedUIT
+      var max = secciones[i + 1] * selectedUIT
       var porcentaje = porcentajes[i] / 100
       if (remuneracionNetaAnual > min && remuneracionNetaAnual <= max) {
         impuesto = (remuneracionNetaAnual - min) * porcentaje
       } else if (remuneracionNetaAnual > min) {
         impuesto = ((max - min) * porcentaje)
       }
-      if (impuesto == 0) {
+      if (impuesto === 0) {
         break
       }
       imposedSections.push({
@@ -157,7 +185,7 @@ class App extends Component {
       impuestoALaRenta += impuesto
     }
 
-    let lastLimit = (secciones[secciones.length - 1] * UIT)
+    let lastLimit = (secciones[secciones.length - 1] * selectedUIT)
     if (remuneracionNetaAnual > lastLimit) {
       let lastPercentage = (porcentajes[porcentajes.length - 1] / 100)
       console.log("lastPercentage" + lastPercentage)
@@ -230,12 +258,28 @@ class App extends Component {
             <Typography gutterBottom variant="h3">
               Calcula tu neto!
             </Typography>
-
+            <FormControl >
+              <InputLabel shrink htmlFor="age-native-label-placeholder">
+                Año
+              </InputLabel>
+              <NativeSelect
+                value={this.state.UIT}
+                onChange={this.handleUITChange}
+                input={<Input name="age" id="age-native-label-placeholder" />}
+              >
+              {
+                UIT.map(function(item, i) {
+                  return <option value={item.amount}>{item.year}</option>
+                })
+              }
+              </NativeSelect>
+              <FormHelperText>Año</FormHelperText>
+            </FormControl>
             <TextField
               error={this.state.inputError}
               id="salary"
               label="Sueldo mensual"
-              onChange={this.handleChange}
+              onChange={this.handleSalaryChange}
               InputProps={{
                 startAdornment: <InputAdornment position="start">S/.</InputAdornment>,
               }}
