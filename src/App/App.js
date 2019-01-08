@@ -149,13 +149,9 @@ class App extends Component {
     let salary = Number(this.state.salary)
     let anualSalary = salary * 12
     let grati = salary * 2 * (1 + essalud)
-    let vacaciones = salary
-    let cts = salary
     var descuentoUIT = selectedUIT * 7
     var remuneracionBrutaAnual = anualSalary
     remuneracionBrutaAnual += grati
-    remuneracionBrutaAnual += vacaciones
-    remuneracionBrutaAnual += cts
 
     if (remuneracionBrutaAnual < descuentoUIT) {
       descuentoUIT = remuneracionBrutaAnual
@@ -220,8 +216,6 @@ class App extends Component {
       uiImpuestoALaRenta.push(
         <RowValue title="Sueldo anual" amount={anualSalary.toFixed(2)} explanation="Este es tu sueldo multiplicado por los 12 meses que esperas trabajar en el año" />,
         <RowValue title="Gratificaciones" amount={grati.toFixed(2)} explanation="Este es el total de gratificaciones que vas a percibir incluyendo el 8% de ESSALUD" />,
-        <RowValue title="Vacaciones" amount={vacaciones.toFixed(2)} explanation="Este es el sueldo adicional por vacaciones" />,
-        <RowValue title="CTS" amount={cts.toFixed(2)} explanation="Este es el sueldo adicional por CTS" />,
         <Divider />,
         <RowValue title="Remuneracion Bruta Anual" amount={remuneracionBrutaAnual.toFixed(2)} explanation="Esta es la suma de tu sueldo anual mas gratificaciones, vacaciones y CTS" />,
         <RowValue title="Descuento de hasta 7 UITs" amount={-descuentoUIT.toFixed(2)} explanation="Este es un beneficio que otorga la SUNAT en el calculo del impuesto a la renta, te descuentan hasta 7 UITs" />,
@@ -252,7 +246,6 @@ class App extends Component {
 
     return (
       <List>
-          <RowValue title="Sueldo mensual" amount={salary.toFixed(2)} explanation="Este es tu sueldo mensual" />
           {uiImpuestoALaRenta}
           <RowValue title="Aporte a AFP" amount={-afp.toFixed(2)} explanation="Esto es un aproximado de lo pagarias por AFP" />
           <Divider />
