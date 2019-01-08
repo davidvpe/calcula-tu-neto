@@ -201,9 +201,8 @@ class App extends Component {
 
     let mandatoryInsuranceTax = 0.1
     let mandatoryInsuranceComission = 0.0169
-    let mandatoryInsurancePrime = 0.0136
 
-    let afp = (salary * mandatoryInsuranceTax) + (salary * mandatoryInsurancePrime) + (salary * mandatoryInsuranceComission)
+    let afp = (salary * mandatoryInsuranceTax) + (salary * mandatoryInsuranceComission)
 
     let monthlyTax = (impuestoALaRenta / 12)
     let monthlySalary = salary - monthlyTax - afp
